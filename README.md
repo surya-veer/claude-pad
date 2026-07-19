@@ -178,11 +178,23 @@ The display runs at 50 FPS and shows contextual animated faces:
 ## 📁 Repository Structure
 
 ```
-claude-keyboard/
+claude-pad/
 ├── ble_keyboard_3btn.ino        # 3-button minimal firmware
 ├── claude-6btn-keyboard.ino     # 6-button full firmware (recommended)
+├── 3d-models/
+│   └── claude_keyboard.3mf      # 3MF print file for the enclosure
 └── README.md
 ```
+
+### Printing the Case
+
+Open `3d-models/claude_keyboard.3mf` in [Bambu Studio](https://bambulab.com/en/download/studio), PrusaSlicer, or any slicer that supports `.3mf`.
+
+Suggested settings:
+- Layer height: **0.2 mm**
+- Infill: **15–20%** (walls carry the load, not infill)
+- Supports: **None required** (designed to print flat-side-down)
+- Material: **PLA** or **PETG**
 
 ---
 
@@ -190,7 +202,7 @@ claude-keyboard/
 
 Pull requests are welcome! Ideas for improvement:
 
-- [ ] STL files for 3D-printed case
+- [x] 3MF file for 3D-printed case (`3d-models/claude_keyboard.3mf`)
 - [ ] Windows shortcut support (currently tuned for macOS)
 - [ ] Configurable keymap via Serial / BLE
 - [ ] Battery + USB charging support
