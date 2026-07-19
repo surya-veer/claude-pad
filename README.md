@@ -1,223 +1,164 @@
-# Claude Pad 🎹
+<p align="center">
+  <img src="assets/logo.jpg" width="200" alt="Claude Pad — BLE macropad for Claude Code">
+</p>
 
-> A custom, 3D-printed companion macropad for **Claude Code** — featuring a built-in OLED screen with animated expressions, a capacitive touch sensor, haptic buzzer feedback, and BLE HID keyboard output over NimBLE.
+<h1 align="center">Claude Pad</h1>
 
----
+<p align="center">
+  <em>A 3D-printed BLE macropad built for Claude Code. Press a button. Claude listens.</em>
+</p>
 
-## ✨ Features
-
-| Feature | Description |
-|---|---|
-| 🔵 BLE HID Keyboard | Connects wirelessly to macOS / Windows / Linux as a native keyboard |
-| 🖥️ 128×64 OLED Display | Animated face reacts to every keypress — idle, plan, mic, escape, rocket, sleep |
-| 🔊 Buzzer Feedback | Distinct tones for each action via PWM-driven passive buzzer |
-| 🤏 Capacitive Touch | Touch the top of the pad to instantly open Claude (Cmd+Shift+)) |
-| 😴 Auto-Sleep | Display dims to a sleeping animation after 60 s of inactivity |
-| 🔄 Wake Animation | Stretching/yawning animation triggered on first button press after sleep |
-| ♻️ Chord Keys | Multi-button combos unlock extra shortcuts (navigate history, dictation, etc.) |
-
----
-
-## 📦 Firmware Versions
-
-Two production-ready sketches are included:
-
-### `ble_keyboard_3btn.ino` — **3-Button Layout** (minimal build)
-Designed for a compact physical layout with the three core Claude Code actions plus navigation:
-
-| Button | GPIO | Action |
-|---|---|---|
-| **PLAN** | 0 | `Shift + Tab` × 2 — opens Claude's plan mode |
-| **ESC** | 1 | `Escape` — cancels current Claude action |
-| **ACCEPT** | 2 | `Enter` — accepts Claude's suggestion |
-| **MIC** | 3 | Hold → `Space` (hold-to-repeat) — voice dictation trigger |
-| **DOWN** | 4 | `↓` Arrow Down |
-| **UP** | 21 | `↑` Arrow Up |
-
-> The "3-button" label refers to the **three primary Claude actions** (Plan / ESC / Accept). The Up/Down are navigation additions that still fit in a compact form factor.
+<p align="center">
+  <img src="https://img.shields.io/badge/platform-ESP32--S3-111111?style=flat-square" alt="ESP32-S3">
+  <img src="https://img.shields.io/badge/protocol-BLE%20HID-111111?style=flat-square" alt="BLE HID">
+  <img src="https://img.shields.io/badge/display-128×64%20OLED-111111?style=flat-square" alt="OLED">
+  <img src="https://img.shields.io/badge/buttons-3%20or%206-111111?style=flat-square" alt="Buttons">
+  <img src="https://img.shields.io/badge/license-MIT-111111?style=flat-square" alt="MIT">
+</p>
 
 ---
 
-### `claude-6btn-keyboard.ino` — **6-Button Layout** (full build, recommended)
-Full 6-key layout — identical core logic with all 6 buttons fully mapped for a premium experience:
+It connects over Bluetooth as a standard HID keyboard. No drivers. No app. Pair once, use forever.
+
+You get one-press shortcuts for the actions you hit dozens of times a day in Claude Code — Plan, Accept, Escape, Mic — plus a touch sensor, a tiny animated OLED face that reacts to every press, and buzzer feedback that confirms each keystroke.
+
+## Firmware versions
+
+Two production-ready sketches are included.
+
+### `ble_keyboard_3btn.ino` — compact build
+
+Three core Claude Code actions, with Up/Down for navigation.
 
 | Button | GPIO | Action |
 |---|---|---|
 | **PLAN** | 0 | `Shift + Tab` × 2 — opens plan mode |
 | **ESC** | 1 | `Escape` — cancels |
-| **ACCEPT** | 2 | `Enter` — accepts |
-| **MIC** | 3 | Hold → `Space` (hold-to-repeat) |
+| **ACCEPT** | 2 | `Enter` — accepts suggestion |
+| **MIC** | 3 | Hold → `Space` — voice dictation |
 | **DOWN** | 4 | `↓` Arrow Down |
 | **UP** | 21 | `↑` Arrow Up |
 
-#### Chord shortcuts (both versions)
+### `claude-6btn-keyboard.ino` — full build (recommended)
+
+Same layout, all six buttons fully mapped and polished.
+
+### Chord shortcuts (both versions)
+
 | Combo | Action |
 |---|---|
-| MIC + ACCEPT | `Cmd + C` (copy) |
-| ACCEPT + UP | `Cmd + [` (navigate backward) |
-| ACCEPT + DOWN | `Cmd + ]` (navigate forward) |
-| MIC + DOWN | `F5` (Mac dictation trigger) |
-| Touch sensor (tap) | `Cmd + Shift + )` — open Claude window |
+| MIC + ACCEPT | `Cmd + C` — copy |
+| ACCEPT + UP | `Cmd + [` — navigate backward |
+| ACCEPT + DOWN | `Cmd + ]` — navigate forward |
+| MIC + DOWN | `F5` — Mac dictation trigger |
+| Touch sensor tap | `Cmd + Shift + )` — open Claude window |
 
----
+## What's on the screen
 
-## 🔌 Hardware & Wiring
-
-### Bill of Materials
-
-| Component | Notes |
-|---|---|
-| **ESP32-S3 Super Mini** | Main MCU — BLE + USB-C |
-| **SSD1306 OLED 128×64** | I2C, 0.96" or 1.3" |
-| **Passive Buzzer** | PWM-driven via `ledc` |
-| **Capacitive Touch Sensor** | TTP223 or similar, active-HIGH |
-| **6× Tactile Push Buttons** | Momentary, normally-open, pulled HIGH internally |
-| **3D-Printed Case** | See `/case` (STL files — coming soon) |
-
----
-
-### Pin Connections
-
-#### OLED Display (I2C)
-
-| OLED Pin | ESP32-S3 GPIO |
-|---|---|
-| SDA | **GPIO 8** |
-| SCL | **GPIO 9** |
-| VCC | 3.3 V |
-| GND | GND |
-
-#### Buttons (active LOW, internal pull-up)
-
-| Button Label | ESP32-S3 GPIO |
-|---|---|
-| PLAN | **GPIO 0** |
-| ESC | **GPIO 1** |
-| ACCEPT | **GPIO 2** |
-| MIC | **GPIO 3** |
-| DOWN | **GPIO 4** |
-| UP | **GPIO 21** |
-
-> Connect each button between the GPIO pin and **GND**. Internal `INPUT_PULLUP` resistors are enabled — no external resistors needed.
-
-#### Buzzer / Speaker
-
-| Buzzer Pin | ESP32-S3 GPIO |
-|---|---|
-| + (positive) | **GPIO 7** |
-| − (negative) | GND |
-
-#### Capacitive Touch Sensor (TTP223 or equivalent)
-
-| Sensor Pin | ESP32-S3 GPIO |
-|---|---|
-| SIG / OUT | **GPIO 20** |
-| VCC | 3.3 V |
-| GND | GND |
-
-> The firmware uses `INPUT_PULLDOWN` and expects an active-HIGH signal from the sensor.
-
-#### Onboard LED
-
-| Function | GPIO |
-|---|---|
-| Status LED | **GPIO 47** (active LOW) |
-
-> LED blinks while BLE is advertising / disconnected; stays solid when connected.
-
----
-
-## 🛠️ Setup & Flash
-
-### Requirements
-
-- [Arduino IDE](https://www.arduino.cc/en/software) ≥ 2.x **or** VS Code + Arduino extension
-- **ESP32 board package** by Espressif (≥ 3.x recommended, ≥ 2.x also supported via `#if` guards in code)
-- Install via Board Manager URL: `https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json`
-
-### Libraries
-
-Install via **Library Manager** (Sketch → Include Library → Manage Libraries):
-
-| Library | Version |
-|---|---|
-| [NimBLE-Arduino](https://github.com/h2zero/NimBLE-Arduino) | ≥ 1.4 |
-| [U8g2](https://github.com/olikraus/u8g2) | ≥ 2.35 |
-
-### Flash Steps
-
-1. Select board: **ESP32S3 Dev Module** (or "ESP32-S3 Super Mini")
-2. Set **USB CDC On Boot** → `Enabled`
-3. Set **PSRAM** → `Disabled`
-4. Open `claude-6btn-keyboard.ino` (6-button, recommended) or `ble_keyboard_3btn.ino` (minimal)
-5. Upload via USB-C
-6. Open Serial Monitor at **115200 baud** to watch BLE advertising status
-7. Pair from your computer's Bluetooth settings — device name: **"Claude Keyboard"**
-
----
-
-## 🎨 OLED Animations
-
-The display runs at 50 FPS and shows contextual animated faces:
+The OLED runs at 50 FPS. The face changes with every button press.
 
 | State | Trigger |
 |---|---|
-| 😐 `IDLE` | No button held |
-| 🔼 `LOOK_UP` | UP button held |
-| 🔽 `LOOK_DOWN` | DOWN button held |
-| 🚀 `ROCKET` | ACCEPT pressed (Enter sent) |
-| 🎙️ `MIC` | MIC button held |
-| 📋 `PLAN` | PLAN button held |
-| 💣 `ESC` | ESC pressed |
-| 😪 `YAWN` | Transition to sleep |
-| 💤 `SLEEP` | Idle > 60 seconds |
-| 🤸 `WAKEUP` | First press after sleep / touch sensor tap |
+| 😐 Idle | Nothing pressed |
+| 🚀 Rocket | ACCEPT pressed |
+| 🎙️ Mic | MIC held |
+| 📋 Plan | PLAN held |
+| 💣 Escape | ESC pressed |
+| 🔼 / 🔽 Look | UP / DOWN held |
+| 💤 Sleep | Idle > 60 seconds |
+| 🤸 Wake | First press after sleep, or touch tap |
 
----
+## Hardware
 
-## 📁 Repository Structure
+| Part | Notes |
+|---|---|
+| ESP32-S3 Super Mini | Main MCU — BLE + USB-C |
+| SSD1306 OLED 128×64 | I2C, 0.96" or 1.3" |
+| Passive buzzer | PWM-driven via `ledc` |
+| TTP223 capacitive touch sensor | Active-HIGH |
+| 6× tactile buttons | Momentary, pulled HIGH internally |
+| 3D-printed case | `3d-models/claude_keyboard.3mf` |
+
+## Wiring
+
+### OLED (I2C)
+
+| OLED | ESP32-S3 |
+|---|---|
+| SDA | GPIO 8 |
+| SCL | GPIO 9 |
+| VCC | 3.3 V |
+| GND | GND |
+
+### Buttons — wire each between its GPIO and GND, no resistors needed
+
+| Button | GPIO |
+|---|---|
+| PLAN | 0 |
+| ESC | 1 |
+| ACCEPT | 2 |
+| MIC | 3 |
+| DOWN | 4 |
+| UP | 21 |
+
+### Buzzer
+
+| Pin | ESP32-S3 |
+|---|---|
+| + | GPIO 7 |
+| − | GND |
+
+### Touch sensor
+
+| Pin | ESP32-S3 |
+|---|---|
+| SIG | GPIO 20 |
+| VCC | 3.3 V |
+| GND | GND |
+
+### Status LED
+
+GPIO 47 (active LOW) — blinks while advertising, solid when connected.
+
+## Setup
+
+**Board:** ESP32S3 Dev Module · USB CDC On Boot → Enabled · PSRAM → Disabled
+
+**Libraries** (install via Library Manager):
+- [NimBLE-Arduino](https://github.com/h2zero/NimBLE-Arduino) ≥ 1.4
+- [U8g2](https://github.com/olikraus/u8g2) ≥ 2.35
+
+Flash `claude-6btn-keyboard.ino`, open Serial Monitor at 115200 baud, then pair from Bluetooth settings. Device name: **Claude Keyboard**.
+
+## 3D print
+
+Open `3d-models/claude_keyboard.3mf` in Bambu Studio or PrusaSlicer.
+
+- Layer height: 0.2 mm
+- Infill: 15–20%
+- Supports: none needed
+- Material: PLA or PETG
+
+## Files
 
 ```
 claude-pad/
 ├── ble_keyboard_3btn.ino        # 3-button minimal firmware
 ├── claude-6btn-keyboard.ino     # 6-button full firmware (recommended)
 ├── 3d-models/
-│   └── claude_keyboard.3mf      # 3MF print file for the enclosure
+│   └── claude_keyboard.3mf      # enclosure print file
+├── assets/
+│   ├── logo.jpg                 # logo
+│   └── photo.jpg                # finished build photo
 └── README.md
 ```
 
-### Printing the Case
+## License
 
-Open `3d-models/claude_keyboard.3mf` in [Bambu Studio](https://bambulab.com/en/download/studio), PrusaSlicer, or any slicer that supports `.3mf`.
-
-Suggested settings:
-- Layer height: **0.2 mm**
-- Infill: **15–20%** (walls carry the load, not infill)
-- Supports: **None required** (designed to print flat-side-down)
-- Material: **PLA** or **PETG**
+MIT — build one, share a photo.
 
 ---
 
-## 🤝 Contributing
-
-Pull requests are welcome! Ideas for improvement:
-
-- [x] 3MF file for 3D-printed case (`3d-models/claude_keyboard.3mf`)
-- [ ] Windows shortcut support (currently tuned for macOS)
-- [ ] Configurable keymap via Serial / BLE
-- [ ] Battery + USB charging support
-
----
-
-## 📜 License
-
-MIT License — free to use, modify, and share. If you build one, share a photo! 🙌
-
----
-
-## 🙏 Credits
-
-Built with ❤️ using:
-- [NimBLE-Arduino](https://github.com/h2zero/NimBLE-Arduino) — lightweight BLE stack for ESP32
-- [U8g2](https://github.com/olikraus/u8g2) — universal 8-bit graphics library
-- Espressif ESP32 Arduino core
+<p align="center">
+  <img src="assets/photo.jpg" width="760" alt="Claude Pad — finished build">
+</p>
