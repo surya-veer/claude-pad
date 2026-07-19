@@ -1,0 +1,33 @@
+# Arduino / IDE build artifacts
+*.elf
+*.bin
+*.hex
+*.map
+*.bak
+
+# Arduino IDE temp files
+/build/
+/cache/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Draft / backup copies (keep only final named versions)
+*copy*.ino
+*copy *.ino
+"* copy.ino"
+*-to-not-touch.ino
+working-normal-version.ino
+display_test.ino
+ble_keyboard_enter.ino
