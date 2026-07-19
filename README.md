@@ -166,3 +166,7 @@ MIT — build one, share a photo.
 <p align="center">
   <img src="assets/photo.jpg" width="760" alt="Claude Pad — finished build">
 </p>
+
+<p align="center">
+  <video src="https://raw.githubusercontent.com/surya-veer/claude-pad/main/assets/demo.mov" width="760" controls="controls" muted="muted"></video>
+</p>
