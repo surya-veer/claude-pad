@@ -153,6 +153,10 @@ claude-pad/
 └── README.md
 ```
 
+## Credits
+
+The enclosure design was adapted from the [Iskra Numpad](https://makerworld.com/en/@historicc) by [**historicc**](https://makerworld.com/en/@historicc) — a beautifully compact, hand-wired, low-profile numpad on MakerWorld. The original model provided the physical starting point that was then modified for the Claude Pad layout and components.
+
 ## License
 
 MIT — build one, share a photo.
